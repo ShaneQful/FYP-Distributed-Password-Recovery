@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+		<title></title>		
+		<link rel="stylesheet" type="text/css" href="ProgressBars/css/style.css">
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+		<script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+		<style type="text/css">
+      .content .span4 {
+				margin-left: 0;
+				padding-left: 19px;
+				border-left: 1px solid #eee;
+			}
+		</style>
+		<script>
+			var progressInterval;
+			$(document).ready(function () {
+			    'use strict';
+			    var i, calcPerSecond, wordsTried;
+			    i = 0;
+			    wordsTried = 0;
+			    calcPerSecond = 6496;
+			    progressInterval = setInterval(function () {
+			        var percent = 100 * (i / 300);
+			        if (percent >= 100) {
+			            clearInterval(progressInterval);
+			            percent = 100;
+			            $('div').removeClass('animate');
+			        }
+			        $('#bar').css('width', percent + '%');
+			        $('#cs').text(calcPerSecond + (Math.random() * 20) + ' c/s');
+			        $('#words').text(wordsTried + ' words');
+			        wordsTried += calcPerSecond / 2;
+			        i += 1;
+			    }, 500);
+			});
+
+			function stopFakingIt() {
+				'use strict';
+				clearInterval(progressInterval);
+				$('div').removeClass('animate');
+			}
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<form>
+				<fieldset>
+					<legend>It's &pi;	cracking time </legend>
+					<p>Calculations per sec:<pre id="cs">0</pre></p>
+					<p>Number of words tried:<pre id="words">0</pre></p>
+					<p>% Dictionary Attempted:</p>
+					<div class="meter animate">
+						<span id="bar" style="width: 1%"><span></span></span>
+					</div>
+					<br />
+					<span class="btn btn-primary" onclick="stopFakingIt()">Stop</span>
+				</fieldset>
+			</form>
+		</div>
+	</body>
+</html>

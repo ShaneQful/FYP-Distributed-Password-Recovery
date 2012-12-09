@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+		<script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+		<style type="text/css">
+      .content .span4 {
+					margin-left: 0;
+					padding-left: 19px;
+					border-left: 1px solid #eee;
+			}
+		</style>
+		<script>
+			$(document).ready(function () {
+				'use strict';
+				var dictionaryRadios;
+				$('#other').click(function () {
+					$('#dictionary-upload').show('slow');
+				});
+				dictionaryRadios = $('[name="dict"]');
+				$(dictionaryRadios).each(function () {
+					if ($(this).attr('id') !== 'other') {
+						$('#' + $(this).attr('id')).click(function () {
+							$('#dictionary-upload').hide('slow');
+						});
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<form class="bs-docs-example">
+				<fieldset>
+					<legend>It's &pi;	cracking time </legend>
+					<p>File:</p>
+					<input type="file" name="tocrack">
+					<br /><br/>
+					<p>File Type:</p>
+					<label class="radio">
+						<input type="radio" name="type" id="pdf" value="pdf" checked>
+						PDF
+					</label>
+					<label class="radio">
+						<input type="radio" name="type" id="odf" value="odf">
+						ODF
+					</label>
+					<label class="radio">
+						<input type="radio" name="type" id="msdoc" value="msdoc">
+						Microsoft Office
+					</label>
+					<label class="radio">
+						<input type="radio" name="type" id="guess" value="guess">
+						Guess file type
+					</label>
+					<br>
+					<p>Dictionary to use:</p>
+					<label class="radio">
+						<input type="radio" name="dict" id="inbuilt" value="inbuilt" checked>
+						Built in wordlist
+					</label>
+					<label class="radio">
+						<input type="radio" name="dict" id="unix" value="unix" >
+						Unix wordlist
+					</label>
+					<label class="radio">
+						<input type="radio" name="dict" id="other" value="other" >
+						Other
+					</label>
+					<div id="dictionary-upload" style="display:none;">
+						<p>File:</p>
+						<input type="file" name="tocrack">
+						<br /><br/>
+					</div>
+					<button class="btn btn-primary">Attack</button>
+				</fieldset>
+			</form>
+		</div>
+	</body>
+</html>

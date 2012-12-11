@@ -12,6 +12,12 @@
 				padding-left: 19px;
 				border-left: 1px solid #eee;
 			}
+			.container{
+				padding: 30px;
+			}
+			pre{
+				background-color: lavender;
+			}
 		</style>
 		<script>
 			var progressInterval;
@@ -45,19 +51,21 @@
 	</head>
 	<body>
 		<div class="container">
-			<form>
-				<fieldset>
-					<legend>It's &pi;	cracking time </legend>
-					<p>Calculations per sec:<pre id="cs">0</pre></p>
-					<p>Number of words tried:<pre id="words">0</pre></p>
-					<p>% Dictionary Attempted:</p>
-					<div class="meter animate">
-						<span id="bar" style="width: 1%"><span></span></span>
-					</div>
-					<br />
-					<span class="btn btn-primary" onclick="stopFakingIt()">Stop</span>
-				</fieldset>
-			</form>
+			<div class="well">
+				<form>
+					<fieldset>
+						<legend>It's &pi;	cracking time </legend>
+						<p>Calculations per sec:<pre id="cs">0</pre></p>
+						<p>Number of words tried:<pre id="words">0</pre></p>
+						<p>% Dictionary Attempted:</p>
+						<div class="meter animate">
+							<span id="bar" style="width: 1%"><span></span></span>
+						</div>
+						<br />
+						<span class="btn btn-primary" onclick="stopFakingIt()">Stop</span>
+					</fieldset>
+				</form>
+			</div>
 		</div>
 	</body>
 </html>

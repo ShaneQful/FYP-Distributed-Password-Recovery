@@ -11,12 +11,9 @@
 				padding-left: 19px;
 				border-left: 1px solid #eee;
 			}
-			/*.container{
-				border:2px solid #a1a1a1;
-				padding:10px 40px; 
-				border-radius:25px;
-				-moz-border-radius:25px;
-			}*/
+			.container{
+				padding: 30px;
+			}
 		</style>
 		<script>
 			$(document).ready(function () {
@@ -54,51 +51,54 @@
 	</head>
 	<body>
 		<div class="container">
-			<form name ="fileform" action="CrackingInProgress.html" method="post" onsubmit="return validateForm();">
-				<fieldset>
-					<legend>It's &pi;	cracking time </legend>
-					<p>File:</p>
-					<input type="file" name="tocrack">
-					<br /><br/>
-					<p>File Type:</p>
-					<label class="radio">
-						<input type="radio" name="type" id="pdf" value="pdf" checked>
-						PDF
-					</label>
-					<label class="radio">
-						<input type="radio" name="type" id="odf" value="odf">
-						ODF
-					</label>
-					<label class="radio">
-						<input type="radio" name="type" id="msdoc" value="msdoc">
-						Microsoft Office
-					</label>
-					<label class="radio">
-						<input type="radio" name="type" id="guess" value="guess">
-						Guess file type
-					</label>
-					<br>
-					<p>Dictionary to use:</p>
-					<label class="radio">
-						<input type="radio" name="dict" id="inbuilt" value="inbuilt" checked>
-						Built in wordlist
-					</label>
-					<label class="radio">
-						<input type="radio" name="dict" id="unix" value="unix" >
-						Unix wordlist
-					</label>
-					<label class="radio">
-						<input type="radio" name="dict" id="other" value="other" >
-						Other
-					</label>
-					<div id="dictionary-upload" style="display:none;">
+			<div class="well">
+				<form name ="fileform" action="CrackingInProgress.html" method="post" onsubmit="return validateForm();">
+					<fieldset>
+						<legend>It's &pi;	cracking time </legend>
 						<p>File:</p>
-						<input type="file" name="wordlist">
+						<input type="file" name="tocrack">
 						<br /><br/>
-					</div>
-					<button class="btn btn-primary">Attack</button>
-				</fieldset>
-			</form>
+						<p>File Type:</p>
+						<label class="radio">
+							<input type="radio" name="type" id="pdf" value="pdf" checked>
+							PDF
+						</label>
+						<label class="radio">
+							<input type="radio" name="type" id="odf" value="odf">
+							ODF
+						</label>
+						<label class="radio">
+							<input type="radio" name="type" id="msdoc" value="msdoc">
+							Microsoft Office
+						</label>
+						<label class="radio">
+							<input type="radio" name="type" id="guess" value="guess">
+							Guess file type
+						</label>
+						<br>
+						<p>Dictionary to use:</p>
+						<label class="radio">
+							<input type="radio" name="dict" id="inbuilt" value="inbuilt" checked>
+							Built in wordlist
+						</label>
+						<label class="radio">
+							<input type="radio" name="dict" id="unix" value="unix" >
+							Unix wordlist
+						</label>
+						<label class="radio">
+							<input type="radio" name="dict" id="other" value="other" >
+							Other
+						</label>
+						<span id="dictionary-upload" style="display:none;">
+							<p>File:</p>
+							<input type="file" name="wordlist">
+							<br /><br/>
+						</span>
+						<br />
+						<button class="btn btn-primary">Attack</button>
+					</fieldset>
+				</form>
+			</div>
 		</div>
 	</body>
 </html>

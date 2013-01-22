@@ -14,6 +14,7 @@ function checkPassword() {
 		if(!$.isEmptyObject(data)){
 			if(data.finished){
 				stopFakingIt();
+				clearInterval(checkPasswordInterval);
 				if(data.found){
 					alert("The password is :" + data.password);
 				}else{

@@ -11,7 +11,11 @@ end
 
 get '/done.json' do 
 	content_type :json
-	{ :finished => false, :found => false }.to_json
+	if(rand(5) == 0)
+		{ :finished => true, :found => true, :password => "Jack loves Shaun" }.to_json
+	else
+		{ :finished => false, :found => false }.to_json
+	end
 end
 
 post '/CrackingInProgress.html' do

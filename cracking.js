@@ -10,7 +10,7 @@ function stopFakingIt() {
 
 function checkPassword() {
 	'use strict';
-	$.getJSON('password_there.json', function(data) {
+	$.getJSON('done.json', function(data) {
 		if(!$.isEmptyObject(data)){
 			if(data.finished){
 				stopFakingIt();

@@ -22,9 +22,6 @@ post '/CrackingInProgress.html' do
 		redirect '/'
 	end
 	File.open(name, "w") { |f| f.write(tmpfile.read) }
-	params.each do |k, v|
-		out += "#{k}=#{v}&"
-	end
 	file = File.open("CrackingInProgress.html", "rb")
 	out = file.read
 end

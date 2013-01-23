@@ -8,6 +8,20 @@ function stopFakingIt() {
 	$('div').removeClass('animate');
 }
 
+function togglePassword() {
+	'use strict';
+	var btnName;
+	$('#pass').toggle('blind');
+	btnName = $('#pass-btn').html();
+	if(btnName.indexOf('Show') === -1) {
+		btnName = btnName.replace('Hide','Show');
+		$('#pass-btn').html(btnName);
+	} else {
+		btnName = btnName.replace('Show','Hide');
+		$('#pass-btn').html(btnName);
+	}
+}
+
 function checkPassword() {
 	'use strict';
 	$.getJSON('done.json', function(data) {
@@ -16,10 +30,13 @@ function checkPassword() {
 				stopFakingIt();
 				clearInterval(checkPasswordInterval);
 				if(data.found){
-					alert("The password is :" + data.password);
+					$('#found').show('blind');
+					$('#stop-btn').hide('blind');
+					$('#pass').html(data.password);
+					alert('The password for the file was found');
 				}else{
-					alert("Sorry the entire dictionary"
-						+"has been attempted but no password has been found");
+					alert('Sorry the entire dictionary'
+						+'has been attempted but no password has been found');
 				}
 			}
 		}
@@ -31,6 +48,7 @@ $(document).ready(function () {
 		var i, calcPerSecond, wordsTried;
 		i = 0;
 		wordsTried = 0;
+		//TODO:Dyanically change this depending on parameters passed from other.
 		calcPerSecond = 6496;
 		progressInterval = setInterval(function () {
 				var percent = 100 * (i / 300);

@@ -34,7 +34,12 @@
 							<span id="bar" style="width: 1%"><span></span></span>
 						</div>
 						<br />
-						<span class="btn btn-primary" onclick="stopFakingIt()">Stop</span>
+						<span id="stop-btn" class="btn btn-primary" onclick="stopFakingIt()">Stop</span>
+						<div style="display:none;" id="found">
+							<span id="pass-btn" class="btn btn-primary" onclick="togglePassword()">Show Password</span>
+							<p></p>
+							<pre style="display:none;" id="pass"></pre>
+						</div>
 					</fieldset>
 				</form>
 			</div>

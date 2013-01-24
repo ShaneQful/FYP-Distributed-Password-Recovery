@@ -2,6 +2,9 @@
 
 require "open3"
 
+#global variables
+$results_folder = "Cracked"
+
 def bash input
 	streams = Open3.popen3 input
 	out = ""
@@ -11,6 +14,28 @@ def bash input
 	return out
 end
 
+def check_for_files slave_ips, filename
+	Thread.new do 
+		finshed = false
+		while !finished do 
+			slave_ips.each do |s|
+				bash "scp pi@#{s}:~/#{filename}/* ~/#{$results_folder}/#{file_name}/"
+			end
+			sleep 5
+			password = bash "cat ~/#{$results_folder}/#{file_name}/* | grep :" #either empty or filename:password
+			how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i - 1
+			finished = password.include?(":") || (how_many_done >= slave_ips.size)
+		end
+		kill_john slave_ips
+		Thread.exit
+	end
+end
+
+def kill_john slave_ips
+	slave_ips.each do |s|
+		bash "ssh pi@#{s} \"killall john\""
+	end
+end
 # ARGV[0] file to crack
 # ARGV[1] format
 # ARGV[2] wordlist
@@ -30,11 +55,12 @@ end
 =end
 input_for_john = bash("python ~/JohnTheRipper/run/#{ARGV[1]}2john.py #{ARGV[0]} >tocrack") #Could be .pl or ...
 count = 0
-bash "~/Cracked"
-bash "mkdir ~/Cracked/#{ARGV[0].split("/")[-1]}"
+file_name = ARGV[0].split("/")[-1]
+bash "mkdir ~/#{$results_folder}"
+bash "mkdir ~/#{$results_folder}/#{file_name}"
 slave_ips.each do |s|
-	bash "scp test_#{count} pi@#{s}:~/"
+# 	bash "scp test_#{count} pi@#{s}:~/"
 	bash "scp tocrack pi@#{s}:~/"
-	bash "cat slave_script.sh | ssh pi@#{s} bash -s - #{master_ip} #{count} #{ARGV[0].split("/")[-1]}"
+	bash "cat slave_script.sh | ssh pi@#{s} bash -s - #{master_ip} #{count} #{file_name} &"
 	count += 1
 end

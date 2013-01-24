@@ -7,4 +7,5 @@
 
 ./JohnTheRipper/run/john -wordlist:test_$2 tocrack
 ./JohnTheRipper/run/john -show tocrack > output$2
-scp output$2 pi@$1:~/Cracked/$3/ 
+mkdir ~/$3/
+mv output$2 ~/$3/

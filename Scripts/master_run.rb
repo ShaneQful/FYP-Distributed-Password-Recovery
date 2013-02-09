@@ -6,6 +6,7 @@ require "open3"
 $results_folder = "Cracked"
 
 def bash input
+#     puts input.inspect #debugging purposes
 	streams = Open3.popen3 input
 	out = ""
 	while((line=streams[1].gets) != nil)
@@ -14,21 +15,19 @@ def bash input
 	return out
 end
 
-def check_for_files slave_ips, filename
-	Thread.new do 
-		finshed = false
-		while !finished do 
-			slave_ips.each do |s|
-				bash "scp pi@#{s}:~/#{filename}/* ~/#{$results_folder}/#{file_name}/"
-			end
-			sleep 5
-			password = bash "cat ~/#{$results_folder}/#{file_name}/* | grep :" #either empty or filename:password
-			how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i - 1
-			finished = password.include?(":") || (how_many_done >= slave_ips.size)
-		end
-		kill_john slave_ips
-		Thread.exit
-	end
+def check_for_files slave_ips, file_name
+    finished = false
+    while !finished do 
+        slave_ips.each do |s|
+            bash "scp pi@#{s}:~/#{file_name}/* ~/#{$results_folder}/#{file_name}/"
+        end
+        password = bash "cat ~/#{$results_folder}/#{file_name}/* | grep :" #either empty or filename:password
+        how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i - 1
+        finished = password.include?(":") || (how_many_done >= slave_ips.size)
+        sleep 5 # Can change this depending on what the overhead is
+    end
+    kill_john slave_ips
+    return password
 end
 
 def kill_john slave_ips
@@ -48,22 +47,25 @@ master_ip = master_ip.split("\n")[0] # If there multiple interfaces take the fir
 slave_ips = bash "cat pis" 
 slave_ips = slave_ips.scan /\d{3}\.\d{3}\.\d+\.\d+/ #first + may not be neccessary
 slave_ips.delete master_ip
-=begin
-if(wordlist.is_new)
-	split dictionary
-end
-=end
-input_for_john = bash("python ~/JohnTheRipper/run/#{ARGV[1]}2john.py #{ARGV[0]} >tocrack") #Could be .pl or ...
-count = 0
 file_name = ARGV[0].split("/")[-1]
+# =begin
+what_ever2john = bash "ls ~/JohnTheRipper/run/*2john* | grep #{ARGV[1]}"
+what_ever2john = what_ever2john.split("/")[-1]
+what_ever2john = what_ever2john.chomp
+# Have to calculate .. to directory or find a better way
+bash "cd ~/JohnTheRipper/run/; ./#{what_ever2john} #{ARGV[0]} > tocrack"
+# bash "cd ~/JohnTheRipper/run/; ./john -wo:all tocrack"
+# sleep 2
+# puts(bash "cd ~/JohnTheRipper/run/; ./john -show tocrack")
+count = 0
 bash "mkdir ~/#{$results_folder}"
 bash "mkdir ~/#{$results_folder}/#{file_name}"
 slave_ips.each do |s|
- 	#bash "scp ~/Dictionaries/test_#{count} pi@#{s}:~/"
-	bash "scp tocrack pi@#{s}:~/"
-	Open3.popen3 "cat slave_script.sh | ssh pi@#{s} bash -s - #{master_ip} #{count} #{file_name} &"
-	count += 1
-	puts "#{count}"
+	bash "scp ~/JohnTheRipper/run/tocrack pi@#{s}:~/ &" #blocking
 end
-puts "Check for files"
-check_for_files slave_ips, file_name
+slave_ips.each do |s|
+   Open3.popen3 "cat slave_script.sh | ssh pi@#{s} bash -s - #{master_ip} #{count} #{file_name} &"
+   count += 1
+end
+# =end
+puts check_for_files(slave_ips, file_name).split(":")[-1]

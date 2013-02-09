@@ -5,7 +5,8 @@
 # $3 filename
 # where the stuff to crack is : ./tocrack
 
-./JohnTheRipper/run/john -wordlist:test_$2 tocrack
+# echo $4 > tocrack
+./JohnTheRipper/run/john -wo:test_$2 tocrack
 mkdir ~/$3/
 mv output$2 ~/$3/
-./JohnTheRipper/run/john -show tocrack > ~/$3/output$2
+./JohnTheRipper/run/john --show tocrack > ~/$3/output$2

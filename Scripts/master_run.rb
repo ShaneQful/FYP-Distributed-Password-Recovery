@@ -59,8 +59,11 @@ file_name = ARGV[0].split("/")[-1]
 bash "mkdir ~/#{$results_folder}"
 bash "mkdir ~/#{$results_folder}/#{file_name}"
 slave_ips.each do |s|
-# 	bash "scp test_#{count} pi@#{s}:~/"
+ 	#bash "scp ~/Dictionaries/test_#{count} pi@#{s}:~/"
 	bash "scp tocrack pi@#{s}:~/"
-	bash "cat slave_script.sh | ssh pi@#{s} bash -s - #{master_ip} #{count} #{file_name} &"
+	Open3.popen3 "cat slave_script.sh | ssh pi@#{s} bash -s - #{master_ip} #{count} #{file_name} &"
 	count += 1
+	puts "#{count}"
 end
+puts "Check for files"
+check_for_files slave_ips, file_name

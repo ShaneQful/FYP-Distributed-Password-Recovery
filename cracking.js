@@ -62,5 +62,6 @@ $(document).ready(function () {
 				wordsTried += calcPerSecond / 2;
 				i += 1;
 		}, 500);
+		checkPassword();//Useful the file has already been cracked
 		checkPasswordInterval = setInterval(checkPassword, 5000);
 });

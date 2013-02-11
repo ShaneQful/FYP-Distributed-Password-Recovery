@@ -31,7 +31,10 @@ post '/CrackingInProgress.html' do
 		@error = "No file selected"
 		redirect '/'
 	end
-	#Set off run scripts
+	doc_format = params[:type]
+	#Need pis file in WebUI too
+# 	Thread.new {run_attack "~/WebUI/#{name}", doc_format}
+	Open3.popen3 "ruby Scripts/master_run.rb ~/WebUI/#{name} #{doc_format}"
 	File.open(name, "w") { |f| f.write(tmpfile.read) }
 	files.push name
 	file = File.open("CrackingInProgress.html", "rb")

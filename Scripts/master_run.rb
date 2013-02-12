@@ -4,6 +4,9 @@ require "open3"
 
 #global variables
 $results_folder = "Cracked"
+#$get_slaves_bash = "nmap -sP 192.168.1.30-45" 
+#arp-scan would be faster but needs root or own user group
+$get_slaves_bash = "cat ~/WebUI/Scripts/pis"
 
 def bash input
 	puts input.inspect #debugging purposes
@@ -36,12 +39,16 @@ def check_for_files slave_ips, file_name
 			bash "scp pi@#{s}:~/#{file_name}/* ~/#{$results_folder}/#{file_name}/ &"
 		end
 		password = bash "cat ~/#{$results_folder}/#{file_name}/* | grep :" #either empty or filename:password
-		how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i - 1
+		how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i
 		finished = password.include?(":") || (how_many_done >= slave_ips.size)
 		sleep 5 # Can change this depending on what the overhead is
 	end
 	kill_john slave_ips
-	return password
+	if(password.include?(":")) 
+		return grab_password(password)
+	else
+		return "Password not found, that or someone chose this very clever"
+	end
 end
 
 def kill_john slave_ips
@@ -53,9 +60,7 @@ end
 def run_attack file_to_crack, doc_format, dictionary, client_ip
 	master_ip = bash("ifconfig -v | grep 'inet addr' | cut -d: -f2 | awk '{print $1}'")
 	master_ip = master_ip.split("\n")[0] # If there multiple interfaces take the first
-	#Need to be root for arp scan to work but I don't want to give it root either find a 
-	#way to add it to some user group like wireshark or don't use it.
-	slave_ips = bash "nmap -sP 192.168.1.30-45" 
+	slave_ips = bash $get_slaves_bash
 	slave_ips = slave_ips.scan /\d{3}\.\d{3}\.\d+\.\d+/ #first + may not be neccessary
 	slave_ips.delete master_ip
 	slave_ips.delete client_ip
@@ -76,11 +81,12 @@ def run_attack file_to_crack, doc_format, dictionary, client_ip
 		bash "scp ~/JohnTheRipper/run/tocrack pi@#{s}:~/ &" #blocking
 	end
 	slave_ips.each do |s|
-		Open3.popen3 "cat slave_script.sh | ssh pi@#{s} bash -s - #{master_ip} #{count} #{file_name} #{dictionary} &"
+		puts "cat slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary} &"
+		Open3.popen3 "cat slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary} &"
 		count += 1
 	end
 	# =end
-	puts grab_password(check_for_files(slave_ips, file_name))
+	puts check_for_files(slave_ips, file_name)
 end
 # ARGV[0] file to crack
 # ARGV[1] format

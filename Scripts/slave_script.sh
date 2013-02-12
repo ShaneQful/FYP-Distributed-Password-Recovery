@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# $1 master_ip
-# $2 count
-# $3 filename
+# $1 count
+# $2 filename
 # where the stuff to crack is : ./tocrack
 
-# echo $4 > tocrack
-./JohnTheRipper/run/john -wo:~/Dictionaries/$4_$2 tocrack
-mkdir ~/$3/
-mv output$2 ~/$3/
-./JohnTheRipper/run/john --show tocrack > ~/$3/output$2
+./JohnTheRipper/run/john -wo:Dictionaries/$3_$1 tocrack
+mkdir ~/$2/
+mv output$1 ~/$2/
+./JohnTheRipper/run/john --show tocrack > ~/$2/output$1

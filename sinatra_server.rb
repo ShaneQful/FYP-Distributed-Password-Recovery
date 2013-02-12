@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'json'
-require 'Scripts/master_run.rb'
+require_relative 'Scripts/master_run.rb'
 
 files = []
 

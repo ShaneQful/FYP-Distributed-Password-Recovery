@@ -50,14 +50,15 @@ def kill_john slave_ips
 	end
 end
 
-def run_attack file_to_crack, doc_format
+def run_attack file_to_crack, doc_format, dictionary, client_ip
 	master_ip = bash("ifconfig -v | grep 'inet addr' | cut -d: -f2 | awk '{print $1}'")
 	master_ip = master_ip.split("\n")[0] # If there multiple interfaces take the first
 	#Need to be root for arp scan to work but I don't want to give it root either find a 
 	#way to add it to some user group like wireshark or don't use it.
-	slave_ips = bash "cat ~/WebUI/Scripts/pis" 
+	slave_ips = bash "nmap -sP 192.168.1.30-45" 
 	slave_ips = slave_ips.scan /\d{3}\.\d{3}\.\d+\.\d+/ #first + may not be neccessary
 	slave_ips.delete master_ip
+	slave_ips.delete client_ip
 	file_name = file_to_crack.split("/")[-1]
 	# =begin
 	what_ever2john = bash "ls ~/JohnTheRipper/run/*2john* | grep #{doc_format}"
@@ -75,7 +76,7 @@ def run_attack file_to_crack, doc_format
 		bash "scp ~/JohnTheRipper/run/tocrack pi@#{s}:~/ &" #blocking
 	end
 	slave_ips.each do |s|
-		Open3.popen3 "cat slave_script.sh | ssh pi@#{s} bash -s - #{master_ip} #{count} #{file_name} &"
+		Open3.popen3 "cat slave_script.sh | ssh pi@#{s} bash -s - #{master_ip} #{count} #{file_name} #{dictionary} &"
 		count += 1
 	end
 	# =end
@@ -84,6 +85,7 @@ end
 # ARGV[0] file to crack
 # ARGV[1] format
 # ARGV[2] wordlist
+# ARGV[3] client ip to ignore
 if __FILE__ == $0
-	run_attack ARGV[0], ARGV[1]
+	run_attack ARGV[0], ARGV[1], ARGV[2], ARGV[3]
 end

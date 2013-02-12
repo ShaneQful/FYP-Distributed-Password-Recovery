@@ -77,14 +77,17 @@ def run_attack file_to_crack, doc_format, dictionary, client_ip
 	count = 0
 	bash "mkdir ~/#{$results_folder}"
 	bash "mkdir ~/#{$results_folder}/#{file_name}"
+	multi_slave_bash = ""
 	slave_ips.each do |s|
-		bash "scp ~/JohnTheRipper/run/tocrack pi@#{s}:~/ &" #blocking
+		multi_slave_bash += "scp ~/JohnTheRipper/run/tocrack pi@#{s}:~/ &" #blocking
 	end
+	bash multi_slave_bash
+	multi_slave_bash = ""
 	slave_ips.each do |s|
-		puts "cat slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary} &"
-		Open3.popen3 "cat slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary} &"
+		multi_slave_bash += "cat slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary} &\n"
 		count += 1
 	end
+	Open3.popen3 multi_slave_bash
 	# =end
 	puts check_for_files(slave_ips, file_name)
 end

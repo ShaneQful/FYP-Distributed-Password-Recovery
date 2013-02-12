@@ -1,6 +1,6 @@
 /*global alert: false, confirm: false, console: false,
 	$:false,  Debug: false, opera: false, prompt: false, WSH: false */
-var progressInterval , checkPasswordInterval;
+var progressInterval , checkPasswordInterval, calcPerSecond;
 
 function stopFakingIt() {
 	'use strict';
@@ -45,11 +45,10 @@ function checkPassword() {
 
 $(document).ready(function () {
 		'use strict';
-		var i, calcPerSecond, wordsTried;
+		var i, wordsTried;
 		i = 0;
 		wordsTried = 0;
 		//TODO:Dyanically change this depending on parameters passed from other.
-		calcPerSecond = 6496;
 		progressInterval = setInterval(function () {
 				var percent = 100 * (i / 300);
 				if (percent >= 100) {

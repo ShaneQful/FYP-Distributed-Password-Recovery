@@ -39,7 +39,7 @@ def check_for_files slave_ips, file_name
 			bash "scp pi@#{s}:~/#{file_name}/* ~/#{$results_folder}/#{file_name}/ &"
 		end
 		password = bash "cat ~/#{$results_folder}/#{file_name}/* | grep :" #either empty or filename:password
-		how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i
+		how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i - 1
 		finished = password.include?(":") || (how_many_done >= slave_ips.size)
 		sleep 5 # Can change this depending on what the overhead is
 	end
@@ -47,7 +47,7 @@ def check_for_files slave_ips, file_name
 	if(password.include?(":")) 
 		return grab_password(password)
 	else
-		return "Password not found, that or someone chose this very clever"
+		return "Password not found, that or someone chose this rather clever password :P"
 	end
 end
 
@@ -82,12 +82,12 @@ def run_attack file_to_crack, doc_format, dictionary, client_ip
 		multi_slave_bash += "scp ~/JohnTheRipper/run/tocrack pi@#{s}:~/ &" #blocking
 	end
 	bash multi_slave_bash
-	multi_slave_bash = ""
+	#multi_slave_bash = ""
 	slave_ips.each do |s|
-		multi_slave_bash += "cat slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary} &\n"
+		Open3.popen3 "cat ~/WebUI/Scripts/slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary}"
 		count += 1
 	end
-	Open3.popen3 multi_slave_bash
+	#Open3.popen3 multi_slave_bash
 	# =end
 	puts check_for_files(slave_ips, file_name)
 end

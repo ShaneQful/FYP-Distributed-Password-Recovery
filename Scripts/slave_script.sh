@@ -2,6 +2,7 @@
 
 # $1 count
 # $2 filename
+# $3 dictionary
 # where the stuff to crack is : ./tocrack
 
 ./JohnTheRipper/run/john -wo:Dictionaries/$3_$1 tocrack

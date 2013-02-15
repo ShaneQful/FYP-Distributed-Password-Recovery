@@ -39,7 +39,7 @@ def check_for_files slave_ips, file_name
 		slave_ips.each do |s|
 			grab_files_bash += "scp pi@#{s}:~/#{file_name}/* ~/#{$results_folder}/#{file_name}/ &"
 		end
-		bash grap_files_bash[0 .. -2]
+		bash grab_files_bash[0 .. -2]
 		password = bash "cat ~/#{$results_folder}/#{file_name}/* | grep :" #either empty or filename:password
 		how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i - 1
 		finished = password.include?(":") || (how_many_done >= slave_ips.size)

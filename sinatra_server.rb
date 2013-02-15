@@ -5,6 +5,7 @@ require_relative 'Scripts/master_run.rb'
 
 files = []
 cracking_speeds = { "office" => 6.3, "odf" => 155, "pdf" => 5281 }
+dictionary_size = { "inbuilt" => 3917193, "unix" => 99171 }
 
 set :public_folder, File.dirname(__FILE__) + '/'
 # set :files,  File.join(settings.public, 'files')
@@ -43,5 +44,6 @@ post '/CrackingInProgress.html' do
 	out = file.read
 	calc_per_sec = cracking_speeds[params[:type]]*9
 	out = out.gsub(/CALC_PER_SEC/, calc_per_sec.to_s)
+	out = out.gsub(/DICTIONARY_SIZE/, dictionary_size[params[:dict]].to_s)
 	out
 end

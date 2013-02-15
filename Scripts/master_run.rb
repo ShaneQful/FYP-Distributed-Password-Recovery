@@ -98,5 +98,22 @@ end
 # ARGV[2] wordlist
 # ARGV[3] client ip to ignore
 if __FILE__ == $0
-	run_attack ARGV[0], ARGV[1], ARGV[2], ARGV[3]
+	if(ARGV[0] &&  ARGV[1] && ARGV[2])
+		run_attack ARGV[0], ARGV[1], ARGV[2], ARGV[3]
+	else
+		puts DATA.read
+	end
 end
+__END__
+Usage:
+ruby master_run.rb filetocrack, format, wordlistname, (optional) iptoignore
+
+This program is tested to work with ruby 1.9.3. If you are using another version,
+especially a previous version of ruby. You may encounter issues. Please don't the
+developer responsable and use a supported version of the language. 
+
+ARGV[0] file to crack
+ARGV[1] format
+ARGV[2] wordlist
+ARGV[3] client ip to ignore
+

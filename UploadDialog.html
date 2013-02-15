@@ -16,21 +16,6 @@
 			}
 		</style>
 		<script>
-			$(document).ready(function () {
-				'use strict';
-				var dictionaryRadios;
-				$('#other').click(function () {
-					$('#dictionary-upload').show('slow');
-				});
-				dictionaryRadios = $('[name="dict"]');
-				$(dictionaryRadios).each(function () {
-					if ($(this).attr('id') !== 'other') {
-						$('#' + $(this).attr('id')).click(function () {
-							$('#dictionary-upload').hide('slow');
-						});
-					}
-				});
-			});
 			function validateForm() {
 				'use strict';
 				var doc;
@@ -85,15 +70,6 @@
 							<input type="radio" name="dict" id="unix" value="unix" >
 							Unix wordlist
 						</label>
-						<label class="radio">
-							<input type="radio" name="dict" id="other" value="other" >
-							Other
-						</label>
-						<span id="dictionary-upload" style="display:none;">
-							<p>File:</p>
-							<input type="file" name="wordlist">
-							<br /><br/>
-						</span>
 						<br />
 						<button class="btn btn-primary">Attack</button>
 					</fieldset>

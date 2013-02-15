@@ -4,9 +4,9 @@ require "open3"
 
 #global variables
 $results_folder = "Cracked"
-#$get_slaves_bash = "nmap -sP 192.168.1.30-45" 
+$get_slaves_bash = "nmap -sP 192.168.1.30-45" 
 #arp-scan would be faster but needs root or own user group
-$get_slaves_bash = "cat ~/WebUI/Scripts/pis"
+#$get_slaves_bash = "cat ~/WebUI/Scripts/pis"
 
 def bash input
 	puts input.inspect #debugging purposes
@@ -34,10 +34,12 @@ end
 
 def check_for_files slave_ips, file_name
 	finished = false
-	while !finished do 
+	while !finished do
+		grab_files_bash = "" 
 		slave_ips.each do |s|
-			bash "scp pi@#{s}:~/#{file_name}/* ~/#{$results_folder}/#{file_name}/ &"
+			grab_files_bash += "scp pi@#{s}:~/#{file_name}/* ~/#{$results_folder}/#{file_name}/ &"
 		end
+		bash grap_files_bash[0 .. -2]
 		password = bash "cat ~/#{$results_folder}/#{file_name}/* | grep :" #either empty or filename:password
 		how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i - 1
 		finished = password.include?(":") || (how_many_done >= slave_ips.size)

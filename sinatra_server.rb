@@ -35,7 +35,7 @@ post '/CrackingInProgress.html' do
 	#Need pis file in WebUI too
 	#Thread.new {run_attack "~/WebUI/#{name}", doc_format}
 	run_attack = "ruby Scripts/master_run.rb ~/WebUI/#{name} #{params[:type]} "
-	run_attack += "#{params[:dict]}" #{request.ip}"
+	run_attack += "#{params[:dict]} #{request.ip}"
 	Open3.popen3 run_attack
 	File.open(name, "w") { |f| f.write(tmpfile.read) }
 	files.push name

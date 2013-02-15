@@ -4,7 +4,7 @@ require 'json'
 require_relative 'Scripts/master_run.rb'
 
 files = []
-cracking_speeds = { "office" => 6.3, "odf" => 155, "sxc" => 155, "pdf" => 5281 }
+cracking_speeds = { "office" => 6.3, "odf" => 155, "sxc" => 226, "pdf" => 5281 }
 dictionary_size = { "inbuilt" => 3917193, "unix" => 99171 }
 
 set :public_folder, File.dirname(__FILE__) + '/'

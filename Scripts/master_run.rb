@@ -4,9 +4,9 @@ require "open3"
 
 #global variables
 $results_folder = "Cracked"
-$get_slaves_bash = "nmap -sP 192.168.1.30-45" 
+#$get_slaves_bash = "nmap -sP 192.168.1.30-45" 
 #arp-scan would be faster but needs root or own user group
-#$get_slaves_bash = "cat ~/WebUI/Scripts/pis"
+$get_slaves_bash = "cat ~/WebUI/Scripts/pis"
 
 def bash input
 	puts input.inspect #debugging purposes

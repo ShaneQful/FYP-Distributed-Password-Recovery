@@ -1,5 +1,4 @@
-/*global alert: false, confirm: false, console: false,
-	$:false,  Debug: false, opera: false, prompt: false, WSH: false */
+/*jslint browser: true, devel: true */
 var progressInterval, checkPasswordInterval, calcPerSecond, dictionarySize;
 
 function stopFakingIt() {

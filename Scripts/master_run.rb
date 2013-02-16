@@ -83,8 +83,7 @@ def run_attack file_to_crack, doc_format, dictionary, client_ip
 	slave_ips.each do |s|
 		multi_slave_bash += "scp ~/JohnTheRipper/run/tocrack pi@#{s}:~/ &" #blocking
 	end
-	bash multi_slave_bash
-	#multi_slave_bash = ""
+	bash multi_slave_bash[0 .. -2]
 	slave_ips.each do |s|
 		Open3.popen3 "cat ~/WebUI/Scripts/slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary}"
 		count += 1

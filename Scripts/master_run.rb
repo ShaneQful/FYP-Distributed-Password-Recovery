@@ -59,23 +59,22 @@ def kill_john slave_ips
 	end
 end
 
-def run_attack file_to_crack, doc_format, dictionary, client_ip
+def get_slaves client_ip
 	master_ip = bash("ifconfig -v | grep 'inet addr' | cut -d: -f2 | awk '{print $1}'")
 	master_ip = master_ip.split("\n")[0] # If there multiple interfaces take the first
 	slave_ips = bash $get_slaves_bash
 	slave_ips = slave_ips.scan /\d{3}\.\d{3}\.\d+\.\d+/ #first + may not be neccessary
 	slave_ips.delete master_ip
 	slave_ips.delete client_ip
+end
+
+def run_attack file_to_crack, doc_format, dictionary, client_ip
+	slave_ips = get_slaves(client_ip)
 	file_name = file_to_crack.split("/")[-1]
-	# =begin
 	what_ever2john = bash "ls ~/JohnTheRipper/run/*2john* | grep #{doc_format}"
 	what_ever2john = what_ever2john.split("/")[-1]
 	what_ever2john = what_ever2john.chomp
-	# Have to calculate .. to directory or find a better way
 	bash "cd ~/JohnTheRipper/run/; ./#{what_ever2john} #{file_to_crack} > tocrack"
-	# bash "cd ~/JohnTheRipper/run/; ./john -wo:all tocrack"
-	# sleep 2
-	# puts(bash "cd ~/JohnTheRipper/run/; ./john -show tocrack")
 	count = 0
 	bash "mkdir ~/#{$results_folder}"
 	bash "mkdir ~/#{$results_folder}/#{file_name}"
@@ -84,13 +83,10 @@ def run_attack file_to_crack, doc_format, dictionary, client_ip
 		multi_slave_bash += "scp ~/JohnTheRipper/run/tocrack pi@#{s}:~/ &" #blocking
 	end
 	bash multi_slave_bash
-	#multi_slave_bash = ""
 	slave_ips.each do |s|
 		Open3.popen3 "cat ~/WebUI/Scripts/slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary}"
 		count += 1
 	end
-	#Open3.popen3 multi_slave_bash
-	# =end
 	puts check_for_files(slave_ips, file_name)
 end
 # ARGV[0] file to crack

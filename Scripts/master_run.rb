@@ -9,7 +9,7 @@ $results_folder = "Cracked"
 $get_slaves_bash = "cat ~/WebUI/Scripts/pis"
 
 def bash input
-	puts input.inspect #debugging purposes
+# 	puts input.inspect #debugging purposes
 	streams = Open3.popen3 input
 	out = ""
 	while((line=streams[1].gets) != nil)
@@ -66,6 +66,7 @@ def get_slaves client_ip
 	slave_ips = slave_ips.scan /\d{3}\.\d{3}\.\d+\.\d+/ #first + may not be neccessary
 	slave_ips.delete master_ip
 	slave_ips.delete client_ip
+	return slave_ips
 end
 
 def run_attack file_to_crack, doc_format, dictionary, client_ip

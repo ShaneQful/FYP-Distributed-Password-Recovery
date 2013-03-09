@@ -4,12 +4,12 @@ require "open3"
 
 #global variables
 $results_folder = "Cracked"
-#$get_slaves_bash = "nmap -sP 192.168.1.30-45" 
+$get_slaves_bash = "nmap -sP 192.168.1.30-45" 
 #arp-scan would be faster but needs root or own user group
-$get_slaves_bash = "cat ~/WebUI/Scripts/pis"
+#$get_slaves_bash = "cat ~/WebUI/Scripts/pis"
 
 def bash input
-# 	puts input.inspect #debugging purposes
+ 	#puts input.inspect #debugging purposes
 	streams = Open3.popen3 input
 	out = ""
 	while((line=streams[1].gets) != nil)
@@ -43,7 +43,9 @@ def check_for_files slave_ips, file_name
 		password = bash "cat ~/#{$results_folder}/#{file_name}/* | grep :" #either empty or filename:password
 		how_many_done =  bash("ls -l ~/#{$results_folder}/#{file_name}/ | wc -l").to_i - 1
 		finished = password.include?(":") || (how_many_done >= slave_ips.size)
-		sleep 5 # Can change this depending on what the overhead is
+		if(!finished)
+			sleep 5 # Can change this depending on what the overhead is
+		end
 	end
 	kill_john slave_ips
 	if(password.include?(":")) 
@@ -55,7 +57,7 @@ end
 
 def kill_john slave_ips
 	slave_ips.each do |s|
-		bash "ssh pi@#{s} \"killall john\""
+		Open3.popen3 "ssh pi@#{s} \"killall john\""
 	end
 end
 
@@ -80,15 +82,19 @@ def run_attack file_to_crack, doc_format, dictionary, client_ip
 	bash "mkdir ~/#{$results_folder}"
 	bash "mkdir ~/#{$results_folder}/#{file_name}"
 	multi_slave_bash = ""
+	b4scp =  Time.new
 	slave_ips.each do |s|
 		multi_slave_bash += "scp ~/JohnTheRipper/run/tocrack pi@#{s}:~/ &" #blocking
 	end
 	bash multi_slave_bash[0 .. -2]
+	b4ssh = Time.new
 	slave_ips.each do |s|
 		Open3.popen3 "cat ~/WebUI/Scripts/slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary}"
 		count += 1
 	end
 	puts check_for_files(slave_ips, file_name)
+	puts "Time taken including scp #{Time.new - b4scp}"
+	puts "Time taken including ssh #{Time.new - b4ssh}"
 end
 # ARGV[0] file to crack
 # ARGV[1] format

@@ -89,7 +89,7 @@ def run_attack file_to_crack, doc_format, dictionary, client_ip
 	bash multi_slave_bash[0 .. -2]
 	b4ssh = Time.new
 	slave_ips.each do |s|
-		Open3.popen3 "cat ~/WebUI/Scripts/slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary}"
+		Open3.popen3 "cat ~/WebUI/Scripts/slave_script.sh | ssh pi@#{s} bash -s - #{count} #{file_name} #{dictionary} #{slave_ips.size}"
 		count += 1
 	end
 	puts check_for_files(slave_ips, file_name)

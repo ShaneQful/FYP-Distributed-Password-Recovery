@@ -1,10 +1,13 @@
 /*jslint browser: true, devel: true */
 /*global $, jQuery*/
-var progressInterval, checkPasswordInterval, calcPerSecond, dictionarySize;
+var progressInterval, checkPasswordInterval, calcPerSecond, dictionarySize, timeouts;
 
 function stopFakingIt() {
     'use strict';
     clearInterval(progressInterval);
+    $.each(timeouts, function () {
+        clearTimeout(this);
+    });
     $('div').removeClass('animate');
 }
 
@@ -43,7 +46,23 @@ function checkPassword() {
     });
 }
 
-$(document).ready(function () {
+function changeStatus() {
+    'use strict';
+    timeouts.push(setTimeout(function () {
+        $('#wh').text('Searching for worker nodes');
+    }, 1000));
+    timeouts.push(setTimeout(function () {
+        $('#wh').text('Sending file to discovered nodes');
+    }, 17000));
+    timeouts.push(setTimeout(function () {
+        $('#wh').text('Starting to crack document');
+    }, 21000));
+    timeouts.push(setTimeout(function () {
+        $('#wh').text('Cracking document ...');
+    }, 22000));
+}
+
+function startCracking(){
     'use strict';
     var wordsTried;
     wordsTried = 0;
@@ -60,4 +79,13 @@ $(document).ready(function () {
     }, 500);
     checkPassword();//Useful the file has already been cracked
     checkPasswordInterval = setInterval(checkPassword, 5000);
+}
+
+$(document).ready(function () {
+    'use strict';
+    timeouts = [];
+    changeStatus();
+    timeouts.push(setTimeout(function () {
+        startCracking();
+    },21000));
 });
